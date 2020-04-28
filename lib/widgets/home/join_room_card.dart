@@ -30,7 +30,7 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
                 spreadRadius: 1)
           ]),
       width: 275,
-      height: 300,
+      height: 350,
       child: Stack(alignment: Alignment.bottomCenter, children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -38,6 +38,18 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text('Your name'),
+              SizedBox(height: 10),
+              TextField(
+                textAlign: TextAlign.center,
+                enableSuggestions: false,
+                decoration: InputDecoration(
+                    hintText: 'Joe',
+                    contentPadding: EdgeInsets.all(5),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15))),
+              ),
+              SizedBox(height: 10),
               Text('Room number'),
               SizedBox(height: 10),
               TextField(
@@ -54,7 +66,7 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                     side: BorderSide(color: Colors.blue)),
-                onPressed: () => FluroRouter.router.navigateTo(context, '/room', transition: TransitionType.material),
+                onPressed: () => FluroRouter.router.navigateTo(context, '/room'),
                 color: Colors.blue,
                 textColor: Colors.white,
                 child: Text("JOIN", style: TextStyle(fontSize: 14)),

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutterpoker/extensions/hover_extensions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_web/shared_preferences_web.dart';
 
 class CreateRoomCard extends StatefulWidget {
   GlobalKey<FlipCardState> cardKey;
@@ -52,7 +54,10 @@ class _CreateRoomCardState extends State<CreateRoomCard> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                     side: BorderSide(color: Colors.blue)),
-                onPressed: () {},
+                onPressed: () async {
+                  var prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('cosmin', 'test');
+                },
                 color: Colors.blue,
                 textColor: Colors.white,
                 child: Text("CREATE", style: TextStyle(fontSize: 14)),

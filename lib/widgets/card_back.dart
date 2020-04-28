@@ -9,7 +9,7 @@ class CardBackWidget extends StatelessWidget {
     double cardWidth = 0;
     double cardHeight = 0;
 
-    if (windowWidth > 700) {
+    if (windowWidth > 960) {
       cardWidth = 100;
     } else {
       cardWidth = 75;
