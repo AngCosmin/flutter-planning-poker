@@ -11,6 +11,18 @@ class CardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var windowWidth = MediaQuery.of(context).size.width;
+    double cardWidth = 0;
+    double cardHeight = 0;
+
+    if (windowWidth > 700) {
+      cardWidth = 100;
+    } else {
+      cardWidth = 75;
+    }
+
+    cardHeight = cardWidth * 1.35;
+
     return Container(
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -24,8 +36,8 @@ class CardWidget extends StatelessWidget {
             )
           ]
       ),
-      height: this.height,
-      width: this.width,
+      height: cardHeight,
+      width: cardWidth,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Image.asset(

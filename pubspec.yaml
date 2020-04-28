@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   flip_card: ^0.4.4
+  fluro: ^1.6.3
   flutter:
     sdk: flutter
 

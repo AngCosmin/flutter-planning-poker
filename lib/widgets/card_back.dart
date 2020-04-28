@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 
 class CardBackWidget extends StatelessWidget {
-  final double width;
-  final double height;
-
-  const CardBackWidget({Key key, this.width, this.height}) : super(key: key);
+  const CardBackWidget({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var windowWidth = MediaQuery.of(context).size.width;
+    double cardWidth = 0;
+    double cardHeight = 0;
+
+    if (windowWidth > 700) {
+      cardWidth = 100;
+    } else {
+      cardWidth = 75;
+    }
+
+    cardHeight = cardWidth * 1.35;
+
     return Container(
       decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -21,8 +30,8 @@ class CardBackWidget extends StatelessWidget {
             )
           ]
       ),
-      width: this.width,
-      height: this.height,
+      width: cardWidth,
+      height: cardHeight,
     );
   }
 }

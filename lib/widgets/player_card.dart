@@ -1,21 +1,18 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
-import 'package:flip_card/flip_card.dart';
 import 'package:flutterpoker/widgets/card.dart';
-import 'package:flutterpoker/widgets/card_back.dart';
 
-class CardWithNameWidget extends StatefulWidget {
+class PlayerCardWidget extends StatefulWidget {
   final int number;
 
-  const CardWithNameWidget({Key key, this.number}) : super(key: key);
+  const PlayerCardWidget({Key key, this.number}) : super(key: key);
 
   @override
-  _CardWithNameWidgetState createState() => _CardWithNameWidgetState();
+  _PlayerCardWidgetState createState() => _PlayerCardWidgetState();
 }
 
-class _CardWithNameWidgetState extends State<CardWithNameWidget> {
+class _PlayerCardWidgetState extends State<PlayerCardWidget> {
   double angle;
   bool _hovering = false;
   Matrix4 nonHoverTransform;
@@ -28,7 +25,7 @@ class _CardWithNameWidgetState extends State<CardWithNameWidget> {
     this.setState(() {
       angle = this._generateRandomAngle(5);
       nonHoverTransform = Matrix4.identity()..rotateZ(angle);
-      hoverTransform = Matrix4.identity()..scale(1.175, 1.175)..translate(-5, -20, 0);
+      hoverTransform = Matrix4.identity()..scale(1.3, 1.3)..translate(-10, -30, 0);
     });
   }
 
@@ -43,17 +40,10 @@ class _CardWithNameWidgetState extends State<CardWithNameWidget> {
         child: Column(
           children: [
             MouseRegion(
-              onEnter: (e) => _mouseEnter(true),
-              onExit: (e) => _mouseEnter(false),
-              child: FlipCard(
-                front: CardWidget(number: this.widget.number),
-                back: CardBackWidget(),
-              )
+                onEnter: (e) => _mouseEnter(true),
+                onExit: (e) => _mouseEnter(false),
+                child: CardWidget(number: this.widget.number)
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: Text("Cosmin"),
-            )
           ],
         ),
       ),
