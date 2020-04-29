@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterpoker/config/Config.dart';
 
 import 'package:flutterpoker/extensions/hover_extensions.dart';
+import 'package:flutterpoker/routing/routes.dart';
+import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shared_preferences_web/shared_preferences_web.dart';
+import 'package:http/http.dart' as http;
 
 class CreateRoomCard extends StatefulWidget {
   GlobalKey<FlipCardState> cardKey;
@@ -27,8 +32,7 @@ class _CreateRoomCardState extends State<CreateRoomCard> {
             BoxShadow(
                 color: Color.fromRGBO(0, 0, 0, 0.12),
                 blurRadius: 3,
-                spreadRadius: 1)
-          ]),
+                spreadRadius: 1)]),
       width: 275,
       height: 300,
       child: Stack(alignment: Alignment.bottomCenter, children: [
@@ -54,10 +58,7 @@ class _CreateRoomCardState extends State<CreateRoomCard> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                     side: BorderSide(color: Colors.blue)),
-                onPressed: () async {
-                  var prefs = await SharedPreferences.getInstance();
-                  await prefs.setString('cosmin', 'test');
-                },
+                onPressed: () => this.createRoom(),
                 color: Colors.blue,
                 textColor: Colors.white,
                 child: Text("CREATE", style: TextStyle(fontSize: 14)),
@@ -79,5 +80,27 @@ class _CreateRoomCardState extends State<CreateRoomCard> {
         )
       ]),
     );
+  }
+
+  void createRoom() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    if (prefs.getString('token') == null) {
+      await prefs.setString('token', randomAlphaNumeric(20));
+    }
+
+    var response = await http.post(
+      '${Config.backendUrl}/room/create',
+      body: jsonEncode(<String, String>{
+        'token': prefs.getString('token'),
+        'password': '1234',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      var roomId = json['roomId'];
+      FluroRouter.router.navigateTo(context, '/room/$roomId');
+    }
   }
 }

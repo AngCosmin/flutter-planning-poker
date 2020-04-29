@@ -4,6 +4,10 @@ import 'package:flutterpoker/widgets/online_players.dart';
 import 'package:flutterpoker/widgets/player_cards.dart';
 
 class RoomScreen extends StatefulWidget {
+  int roomId;
+
+  RoomScreen({Key key, this.roomId}) : super(key: key);
+
   @override
   _RoomScreenState createState() => _RoomScreenState();
 }

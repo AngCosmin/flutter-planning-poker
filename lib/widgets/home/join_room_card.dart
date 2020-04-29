@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutterpoker/extensions/hover_extensions.dart';
+import 'package:flutterpoker/managers/socket-manager.dart';
 import 'package:flutterpoker/routing/routes.dart';
 
 class JoinRoomCard extends StatefulWidget {
@@ -66,7 +67,10 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                     side: BorderSide(color: Colors.blue)),
-                onPressed: () => FluroRouter.router.navigateTo(context, '/room'),
+                onPressed: () => {
+                  SocketManager.post('/user/info', { 'test': 'da' })
+                  // FluroRouter.router.navigateTo(context, '/room')
+                },
                 color: Colors.blue,
                 textColor: Colors.white,
                 child: Text("JOIN", style: TextStyle(fontSize: 14)),

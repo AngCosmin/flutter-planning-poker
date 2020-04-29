@@ -6,15 +6,13 @@ class CardBackWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var windowWidth = MediaQuery.of(context).size.width;
-    double cardWidth = 0;
+    double cardWidth = 75;
     double cardHeight = 0;
 
     if (windowWidth > 960) {
       cardWidth = 100;
-    } else {
-      cardWidth = 75;
     }
-
+    
     cardHeight = cardWidth * 1.35;
 
     return Container(

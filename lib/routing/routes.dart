@@ -10,12 +10,13 @@ class FluroRouter {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) => HomeScreen()
   );
 
-  static Handler _roomhandler = Handler(
-      handlerFunc: (BuildContext context, Map<String, dynamic> params) => RoomScreen()
-  );
+  static Handler _roomhandler = Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+    int roomId = int.parse(params['roomId'][0]);
+    return RoomScreen(roomId: roomId);
+  });
 
   static void setupRouter() {
     router.define('/', handler: _homehandler,);
-    router.define('/room', handler: _roomhandler,);
+    router.define('/room/:roomId', handler: _roomhandler,);
   }
 }
