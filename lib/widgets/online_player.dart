@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class OnlinePlayerWidget extends StatefulWidget {
+  String name;
+
+  OnlinePlayerWidget({ Key key, this.name }) : super(key: key);
+
   @override
   _OnlinePlayerWidgetState createState() => _OnlinePlayerWidgetState();
 }
@@ -21,7 +25,7 @@ class _OnlinePlayerWidgetState extends State<OnlinePlayerWidget> {
             ),
           ),
           Text(
-            "Tom",
+            this.widget.name,
             style: TextStyle(
 //              color: Colors.green
             ),

@@ -3,6 +3,10 @@ import 'package:flutterpoker/widgets/online_player.dart';
 import 'package:flutterpoker/widgets/player_card.dart';
 
 class OnlinePlayersWidget extends StatefulWidget {
+  var players = List<String>();
+
+  OnlinePlayersWidget({Key key, this.players}) : super(key: key);
+
   @override
   _OnlinePlayersWidgetState createState() => _OnlinePlayersWidgetState();
 }
@@ -30,20 +34,17 @@ class _OnlinePlayersWidgetState extends State<OnlinePlayersWidget> {
         padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Wrap(
           alignment: WrapAlignment.center,
-          children: [
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-            OnlinePlayerWidget(),
-          ],
+          children: this._getListings(),
         ),
       ),
     );
+  }
+
+  List<Widget> _getListings() { // <<<<< Note this change for the return type
+    List listings = new List<Widget>();
+    for (var player in this.widget.players) {
+      listings.add(OnlinePlayerWidget(name: player));
+    }
+    return listings;
   }
 }

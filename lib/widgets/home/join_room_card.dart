@@ -68,8 +68,7 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
                     borderRadius: BorderRadius.circular(18),
                     side: BorderSide(color: Colors.blue)),
                 onPressed: () => {
-                  SocketManager.post('/user/info', { 'test': 'da' })
-                  // FluroRouter.router.navigateTo(context, '/room')
+                  FluroRouter.router.navigateTo(context, '/room/20')
                 },
                 color: Colors.blue,
                 textColor: Colors.white,

@@ -7,9 +7,12 @@ import 'package:flutterpoker/widgets/card.dart';
 import 'package:flutterpoker/widgets/card_back.dart';
 
 class CardWithNameWidget extends StatefulWidget {
+  final String name;
   final int number;
+  final bool showValue;
+  final GlobalKey<FlipCardState> cardKey;
 
-  const CardWithNameWidget({Key key, this.number}) : super(key: key);
+  const CardWithNameWidget({Key key, this.name, this.number, this.showValue, this.cardKey}) : super(key: key);
 
   @override
   _CardWithNameWidgetState createState() => _CardWithNameWidgetState();
@@ -20,7 +23,7 @@ class _CardWithNameWidgetState extends State<CardWithNameWidget> {
   bool _hovering = false;
   Matrix4 nonHoverTransform;
   Matrix4 hoverTransform;
-
+  
   @override
   void initState() {
     super.initState();
@@ -46,13 +49,15 @@ class _CardWithNameWidgetState extends State<CardWithNameWidget> {
               onEnter: (e) => _mouseEnter(true),
               onExit: (e) => _mouseEnter(false),
               child: FlipCard(
-                front: CardWidget(number: this.widget.number),
-                back: CardBackWidget(),
+                key: this.widget.cardKey,
+                flipOnTouch: false,
+                front: CardBackWidget(),
+                back: CardWidget(number: this.widget.number),
               )
             ),
             Padding(
               padding: const EdgeInsets.only(top: 5.0),
-              child: Text("Cosmin"),
+              child: Text(this.widget.name),
             )
           ],
         ),
