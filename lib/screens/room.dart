@@ -4,11 +4,10 @@ import 'dart:convert';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterpoker/config/Config.dart';
+import 'package:flutterpoker/managers/session-manager.dart';
 import 'package:flutterpoker/widgets/card_with_name.dart';
 import 'package:flutterpoker/widgets/online_players.dart';
 import 'package:flutterpoker/widgets/player_cards.dart';
-import 'package:random_string/random_string.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class RoomScreen extends StatefulWidget {
@@ -48,7 +47,7 @@ class _RoomScreenState extends State<RoomScreen> {
               children: [
                 OnlinePlayersWidget(players: this.playerNames),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 30, 20, 200),
+                  padding: EdgeInsets.fromLTRB(20, 30, 20, 200),
                   child: Center(
                     child: Wrap(
                       alignment: WrapAlignment.center,
@@ -61,26 +60,58 @@ class _RoomScreenState extends State<RoomScreen> {
             ),
             Align(
                 alignment: Alignment.bottomCenter,
-                child: PlayerCards()
+                child: PlayerCards(onCardPressed)
             )
           ]
       ),
     );
   }
 
-  void getRoomStatus() async {
-    var prefs = await SharedPreferences.getInstance();
+  onCardPressed(int number) async {
+    print("CARD PRESSED: $number");
 
-    if (prefs.getString('token') == null) {
-      await prefs.setString('token', randomAlphaNumeric(20));
+    var sessionManager = SessionManager();
+    var token = await sessionManager.getToken();
+
+    var response = await http.post(
+      '${Config.backendUrl}/room/vote',
+      body: jsonEncode(<String, dynamic>{
+        'token': token,
+        'roomId': this.widget.roomId,
+        'vote': number,
+      }),
+    );
+
+    var voteFound = false;
+    for (var hiddenCard in this.hiddenCards) {
+      if (hiddenCard['token'] == token) {
+        voteFound = true;
+      }
     }
-    
+
+    if (!voteFound) {
+      setState(() {
+        hiddenCards.add({ 
+          'token': token, 
+          'name': 'Z', 
+          'vote': null 
+        });
+      });
+    }
+
+    if (response.statusCode == 200) {
+      print("VOTED");
+    }
+  }
+
+  void getRoomStatus() async {
+    var sessionManager = SessionManager();
+    var token = await sessionManager.getToken();
+
     var response = await http.post(
       '${Config.backendUrl}/room/status',
       body: jsonEncode(<String, dynamic>{
-        // TODO: Uncomment this line
-        // 'token': prefs.getString('token'),
-        'token': '123456789',
+        'token': token,
         'roomId': this.widget.roomId,
       }),
     );
@@ -95,7 +126,11 @@ class _RoomScreenState extends State<RoomScreen> {
         _playerNames.add(player['name']);
 
         if (player['hasVoted']) {
-          _hiddenCards.add({ 'name': player['name'], 'vote': player['vote'] });
+          _hiddenCards.add({ 
+            'token': player['token'], 
+            'name': player['name'], 
+            'vote': player['vote'] 
+          });
         }
       }
 
@@ -111,7 +146,7 @@ class _RoomScreenState extends State<RoomScreen> {
     }
   }
 
-  List<Widget> generateHiddenCards() { // <<<<< Note this change for the return type
+  List<Widget> generateHiddenCards() {
     List listings = new List<Widget>();
     for (var card in this.hiddenCards) {
       listings.add(
@@ -119,7 +154,7 @@ class _RoomScreenState extends State<RoomScreen> {
           name: card['name'], 
           number: card['vote'], 
           showValue: hasEveryoneVoted,
-          cardKey: cardKey,
+          // cardKey: cardKey,
         )
       );
     }

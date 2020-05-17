@@ -1,5 +1,4 @@
 import 'package:flutterpoker/config/Config.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 class SocketManager {
@@ -13,15 +12,13 @@ class SocketManager {
       'secure': false,
     });
 
-    var prefs = await SharedPreferences.getInstance();
-
     socket.on('connect', (_) {
       print('connected');
-      SocketManager.post('/user/status', { 'isOnline': true, 'token': prefs.getString('token') });
+      SocketManager.post('/user/status', { 'isOnline': true, 'token': headers['token']});
 
       socket.on('disconnect', (data) {
         print('disconnected');
-        SocketManager.post('/user/status', { 'isOnline': false, 'token': prefs.getString('token') });
+        SocketManager.post('/user/status', { 'isOnline': false, 'token': headers['token'] });
       });
     });
   }

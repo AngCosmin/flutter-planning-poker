@@ -5,14 +5,21 @@ import 'package:flutterpoker/routing/routes.dart';
 import 'package:random_string/random_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'managers/session-manager.dart';
+
 void main() async {
-  var prefs = await SharedPreferences.getInstance();
+  var sessionManager = SessionManager();
 
-  if (prefs.getString('token') == null) {
-    await prefs.setString('token', randomAlphaNumeric(20));
-  }
-
-  SocketManager.start(headers: { 'token': prefs.getString('token') });
+  sessionManager.getToken().then((value) {
+    if (value == null) {
+      var token = randomAlphaNumeric(20);
+      sessionManager.setToken(token);  
+      SocketManager.start(headers: { 'token': token });
+    } else {
+      SocketManager.start(headers: { 'token': value });
+    }
+  });
+  
   FluroRouter.setupRouter();
   runApp(MyApp());
 }

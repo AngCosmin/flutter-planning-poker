@@ -10,9 +10,8 @@ class CardWithNameWidget extends StatefulWidget {
   final String name;
   final int number;
   final bool showValue;
-  final GlobalKey<FlipCardState> cardKey;
 
-  const CardWithNameWidget({Key key, this.name, this.number, this.showValue, this.cardKey}) : super(key: key);
+  const CardWithNameWidget({Key key, this.name, this.number, this.showValue }) : super(key: key);
 
   @override
   _CardWithNameWidgetState createState() => _CardWithNameWidgetState();
@@ -49,10 +48,10 @@ class _CardWithNameWidgetState extends State<CardWithNameWidget> {
               onEnter: (e) => _mouseEnter(true),
               onExit: (e) => _mouseEnter(false),
               child: FlipCard(
-                key: this.widget.cardKey,
+                // key: this.widget.cardKey,
                 flipOnTouch: false,
-                front: CardBackWidget(),
-                back: CardWidget(number: this.widget.number),
+                front: this.widget.number == null ? CardBackWidget() : CardWidget(number: this.widget.number),
+                back: CardBackWidget(),
               )
             ),
             Padding(

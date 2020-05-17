@@ -1,10 +1,13 @@
+import 'dart:convert';
+
 import 'package:flip_card/flip_card.dart';
-import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterpoker/config/Config.dart';
+import 'package:flutterpoker/managers/session-manager.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutterpoker/extensions/hover_extensions.dart';
-import 'package:flutterpoker/managers/socket-manager.dart';
 import 'package:flutterpoker/routing/routes.dart';
 
 class JoinRoomCard extends StatefulWidget {
@@ -17,6 +20,19 @@ class JoinRoomCard extends StatefulWidget {
 }
 
 class _JoinRoomCardState extends State<JoinRoomCard> {
+  final nameController = TextEditingController();
+  final roomController = TextEditingController();
+
+  @override
+  void initState() { 
+    super.initState();
+    
+    var sessionManager = SessionManager();
+    sessionManager.getName().then((value) {
+      this.nameController.text = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,10 +58,10 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
               Text('Your name'),
               SizedBox(height: 10),
               TextField(
+                controller: nameController,
                 textAlign: TextAlign.center,
                 enableSuggestions: false,
                 decoration: InputDecoration(
-                    hintText: 'Joe',
                     contentPadding: EdgeInsets.all(5),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
@@ -54,10 +70,10 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
               Text('Room number'),
               SizedBox(height: 10),
               TextField(
+                controller: roomController,
                 textAlign: TextAlign.center,
                 enableSuggestions: false,
                 decoration: InputDecoration(
-                    hintText: '12345',
                     contentPadding: EdgeInsets.all(5),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15))),
@@ -67,9 +83,7 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                     side: BorderSide(color: Colors.blue)),
-                onPressed: () => {
-                  FluroRouter.router.navigateTo(context, '/room/20')
-                },
+                onPressed: onJoinPressed,
                 color: Colors.blue,
                 textColor: Colors.white,
                 child: Text("JOIN", style: TextStyle(fontSize: 14)),
@@ -91,5 +105,24 @@ class _JoinRoomCardState extends State<JoinRoomCard> {
         )
       ]),
     );
+  }
+
+  onJoinPressed() async {
+    var sessionManager = SessionManager();
+    var token = await sessionManager.getToken();
+
+    var response = await http.post(
+      '${Config.backendUrl}/room/join',
+      body: jsonEncode(<String, dynamic>{
+        'token': token,
+        'name': nameController.text,
+        'roomId': roomController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      await sessionManager.setName(nameController.text);
+      FluroRouter.router.navigateTo(context, '/room/${roomController.text}');
+    }
   }
 }

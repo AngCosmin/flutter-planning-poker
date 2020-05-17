@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutterpoker/widgets/player_card.dart';
 
 class PlayerCards extends StatefulWidget {
+  Function(int) callback;
+
+  PlayerCards(this.callback);
+
   @override
   _PlayerCardsState createState() => _PlayerCardsState();
 }
@@ -30,16 +34,16 @@ class _PlayerCardsState extends State<PlayerCards> {
         child: Wrap(
           runSpacing: -50,
           children: [
-            PlayerCardWidget(number: 0),
-            PlayerCardWidget(number: 1),
-            PlayerCardWidget(number: 2),
-            PlayerCardWidget(number: 3),
-            PlayerCardWidget(number: 5),
-            PlayerCardWidget(number: 8),
-            PlayerCardWidget(number: 13),
-            PlayerCardWidget(number: 20),
-            PlayerCardWidget(number: 40),
-            PlayerCardWidget(number: 100),
+            GestureDetector(onTap: () => { this.widget.callback(0) }, child: PlayerCardWidget(number: 0)),
+            GestureDetector(onTap: () => { this.widget.callback(1) }, child: PlayerCardWidget(number: 1)),
+            GestureDetector(onTap: () => { this.widget.callback(2) }, child: PlayerCardWidget(number: 2)),
+            GestureDetector(onTap: () => { this.widget.callback(3) }, child: PlayerCardWidget(number: 3)),
+            GestureDetector(onTap: () => { this.widget.callback(5) }, child: PlayerCardWidget(number: 5)),
+            GestureDetector(onTap: () => { this.widget.callback(8) }, child: PlayerCardWidget(number: 8)),
+            GestureDetector(onTap: () => { this.widget.callback(13) }, child: PlayerCardWidget(number: 13)),
+            GestureDetector(onTap: () => { this.widget.callback(20) }, child: PlayerCardWidget(number: 20)),
+            GestureDetector(onTap: () => { this.widget.callback(40) }, child: PlayerCardWidget(number: 40)),
+            GestureDetector(onTap: () => { this.widget.callback(100) }, child: PlayerCardWidget(number: 100)),
           ],
         ),
       ),
